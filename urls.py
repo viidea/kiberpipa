@@ -1,5 +1,5 @@
 from django.conf.urls.defaults import *
 
 urlpatterns = patterns('',
-	(r'^(izven|pot|su)/(?P<txt>[^/]+)/(play.html|'')$','vl.views.urlrw'), 
+	(r'(?i)^media/(?P<txt>[^/]+)/(play.html|'')$','lectures._custom.kiberpipa.views.urlrw'), 
 )
