@@ -1,4 +1,9 @@
 from django.http import Http404
+from django.shortcuts import render_to_response, get_object_or_404
+from django.http import HttpResponse
+
+import Image
+
 from vl.models import Lecture
 from lectures.vl.views import urlrw as vl_urlrw
 
@@ -9,3 +14,18 @@ def urlrw(request, txt, template_name=None):
         return vl_urlrw(request, lec.slug, template_name)
 
     raise Http404
+
+
+IMAGE_I_SIZE = 500, 500
+def image_i(request, slug, part_id=None):
+    lec = get_object_or_404(Lecture,slug=slug)
+    if lec.get_screenshot_att():
+        image = Image.open(lec.get_screenshot_att().render.mnt)
+        image.thumbnail(IMAGE_I_SIZE,Image.ANTIALIAS)
+
+        response = HttpResponse(mimetype="image/jpeg")
+        image.save(response, "JPEG")
+        return response
+    else: raise Http404
+
+    return HttpResponse('ok')
