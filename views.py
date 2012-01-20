@@ -1,5 +1,7 @@
 from django.http import Http404
 from django.shortcuts import render_to_response, get_object_or_404
+from django.views.decorators.cache import cache_control
+
 from django.http import HttpResponse
 
 import Image
@@ -17,8 +19,10 @@ def urlrw(request, txt, template_name=None):
 
 
 IMAGE_I_SIZE = 500, 500
+@cache_control(must_revalidate=False, max_age=86400)
 def image_i(request, slug, part_id=None):
     lec = get_object_or_404(Lecture,slug=slug)
+
     if lec.get_screenshot_att():
         image = Image.open(lec.get_screenshot_att().render.mnt)
         image.thumbnail(IMAGE_I_SIZE,Image.ANTIALIAS)
@@ -26,6 +30,6 @@ def image_i(request, slug, part_id=None):
         response = HttpResponse(mimetype="image/jpeg")
         image.save(response, "JPEG")
         return response
-    else: raise Http404
+    else: 
+        raise Http404
 
-    return HttpResponse('ok')
