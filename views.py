@@ -21,7 +21,7 @@ def urlrw(request, txt, template_name=None):
 IMAGE_I_SIZE = 500, 500
 @cache_control(must_revalidate=False, max_age=86400)
 def image_i(request, slug, part_id=None):
-    lec = get_object_or_404(Lecture,slug=slug)
+    lec = get_object_or_404(Lecture,slug__istartswith=slug[0:50])
 
     if lec.get_screenshot_att():
         image = Image.open(lec.get_screenshot_att().render.mnt)
