@@ -23,14 +23,14 @@ IMAGE_I_SIZE = 500, 500
 @cache_control(must_revalidate=False, max_age=86400)
 def image_i(request, slug, part_id=None):
     text = slug[0:50].replace('.', '')
-    if Lecture.objects.filter(slug__istartswith=text).count():
+    try:
         lec = Lecture.objects.filter(slug__istartswith=text).order_by('id')[0]
-    else:
+    except IndexError:
         raise Http404
 
-
-    if lec.get_screenshot_att():
-        image = Image.open(lec.get_screenshot_att().render.mnt)
+    screenshot = lec.get_screenshot()
+    if screenshot:
+        image = Image.open(screenshot.render.mnt)
         image.thumbnail(IMAGE_I_SIZE,Image.ANTIALIAS)
 
         response = HttpResponse(mimetype="image/jpeg")
