@@ -4,7 +4,7 @@ from django.views.decorators.cache import cache_control
 
 from django.http import HttpResponse
 
-import Image
+from PIL import Image
 
 from vl.models import Lecture
 from lectures.vl.views import urlrw as vl_urlrw
